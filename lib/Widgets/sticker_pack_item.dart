@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sticker_dev/constants/constants.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/screens/sticker_pack_info.dart';
-import 'package:whatsapp_stickers_handler/exceptions.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
 class StickerPackItem extends StatelessWidget {
   final StickerPacks stickerPack;
-  final String stickerFetchType;
 
   StickerPackItem({
     Key? key,
     required this.stickerPack,
-    required this.stickerFetchType,
   }) : super(key: key);
 
   Widget addStickerPackButton(BuildContext context, bool isInstalled,
@@ -29,31 +27,8 @@ class StickerPackItem extends StatelessWidget {
           ? AppLocalizations.of(context)!.remove
           : AppLocalizations.of(context)!.add),
       onPressed: () async {
-        Map<String, List<String>> stickers = <String, List<String>>{};
-        var tryImage = '';
-        for (var e in stickerPack.stickers!) {
-          stickers[WhatsappStickerImageHandler.fromAsset(
-                  "sticker_packs/${stickerPack.identifier}/${e.imageFile as String}")
-              .path] = e.emojis as List<String>;
-        }
-        tryImage = WhatsappStickerImageHandler.fromAsset(
-                "sticker_packs/${stickerPack.identifier}/${stickerPack.trayImageFile}")
-            .path;
-        try {
-          await _whatsappStickersHandler.addStickerPack(
-            stickerPack.identifier,
-            stickerPack.name as String,
-            stickerPack.publisher as String,
-            tryImage,
-            stickerPack.publisherWebsite,
-            stickerPack.privacyPolicyWebsite,
-            stickerPack.licenseAgreementWebsite,
-            stickerPack.animatedStickerPack ?? false,
-            stickers,
-          );
-        } on WhatsappStickersException catch (e) {
-          print(e.cause);
-        }
+        // TODO
+        throw 'Not implemented';
       },
     );
   }
@@ -62,6 +37,7 @@ class StickerPackItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final WhatsappStickersHandler _whatsappStickersHandler =
         WhatsappStickersHandler();
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
@@ -72,19 +48,27 @@ class StickerPackItem extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => StickerPackInfoScreen(
                           stickerPack: stickerPack,
-                          stickerFetchType: stickerFetchType,
                         )));
           },
           title: Text(stickerPack.name ?? ""),
           subtitle: Text(stickerPack.publisher ?? ""),
-          leading: stickerFetchType == "remoteStickers"
-              ? FadeInImage(
-                  placeholder: const AssetImage("assets/images/loading.gif"),
-                  image: NetworkImage(
-                      "${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}"),
-                )
-              : Image.asset(
-                  "sticker_packs/${stickerPack.identifier}/${stickerPack.trayImageFile}"),
+          leading: Image.network(
+            "${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}",
+            fit: BoxFit.fill,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: Shimmer.fromColors(
+                      baseColor: Theme.of(context).focusColor,
+                      highlightColor: Theme.of(context).hoverColor,
+                      child: Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white))));
+            },
+          ),
           trailing: FutureBuilder(
               future: _whatsappStickersHandler
                   .isStickerPackInstalled(stickerPack.identifier as String),

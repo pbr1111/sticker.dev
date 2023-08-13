@@ -40,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   share_plus: ^6.3.0
   plugin_platform_interface: ^2.1.2
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -62,12 +63,3 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-    - sticker_packs/1/
-    - sticker_packs/2/
-    - sticker_packs/3/
-    - sticker_packs/4/
-    - sticker_packs/5/
-    - sticker_packs/6/
-    - sticker_packs/7/
-    - sticker_packs/sticker_packs.json
