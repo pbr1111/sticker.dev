@@ -91,16 +91,14 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: true,
+          SliverAppBar.large(
+            // pinned: true,
             floating: false,
-            expandedHeight: 160,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                widget.stickerPack.name!,
-                overflow: TextOverflow.ellipsis,
-              ),
+            title: Text(
+              widget.stickerPack.name!,
+              overflow: TextOverflow.ellipsis,
             ),
+            leading: BackButton(),
           ),
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

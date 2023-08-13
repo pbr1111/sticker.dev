@@ -18,11 +18,11 @@ class NavigationBarApp extends StatelessWidget {
         theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
-            colorSchemeSeed: Colors.green[700]),
+            colorSchemeSeed: Colors.green[600]),
         darkTheme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
-          colorSchemeSeed: Colors.green[700],
+          colorSchemeSeed: Colors.green[600],
         ),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [
