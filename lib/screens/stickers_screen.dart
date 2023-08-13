@@ -33,9 +33,9 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   @override
-  initState() async {
+  void initState() {
     super.initState();
-    await _loadStickers();
+    _loadStickers();
   }
 
   Future<void> _refreshStickers() async {

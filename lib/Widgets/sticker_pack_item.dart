@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:sticker_dev/widgets/sticker.dart';
 import 'package:sticker_dev/constants/constants.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
-import 'package:sticker_dev/screens/sticker_pack_info.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
+
+import '../screens/sticker_pack_detail.dart';
 
 class StickerPackItem extends StatelessWidget {
   final StickerPacks stickerPack;
@@ -46,29 +47,16 @@ class StickerPackItem extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => StickerPackInfoScreen(
+                    builder: (context) => StickerPackDetailScreen(
                           stickerPack: stickerPack,
                         )));
           },
           title: Text(stickerPack.name ?? ""),
           subtitle: Text(stickerPack.publisher ?? ""),
-          leading: Image.network(
-            "${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}",
-            fit: BoxFit.fill,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: Shimmer.fromColors(
-                      baseColor: Theme.of(context).focusColor,
-                      highlightColor: Theme.of(context).hoverColor,
-                      child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white))));
-            },
-          ),
+          leading: Sticker(
+              imageUrl:
+                  '${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}',
+              size: 50),
           trailing: FutureBuilder(
               future: _whatsappStickersHandler
                   .isStickerPackInstalled(stickerPack.identifier as String),
