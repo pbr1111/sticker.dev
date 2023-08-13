@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sticker_dev/helpers/whatsapp_helpers.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
-import 'package:sticker_dev/constants/constants.dart';
 import 'package:whatsapp_stickers_handler/exceptions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../helpers/path_helpers.dart';
 import '../widgets/sticker_image.dart';
 
 class StickerPackDetailScreen extends StatefulWidget {
@@ -19,7 +19,12 @@ class StickerPackDetailScreen extends StatefulWidget {
 }
 
 class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
+  bool isDownloadingStickers = false;
+
   Future<void> _addPackToWhatsApp() async {
+    setState(() {
+      isDownloadingStickers = true;
+    });
     try {
       await addPackToWhatsApp(widget.stickerPack);
     } on WhatsappStickersException catch (e) {
@@ -29,6 +34,10 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
           .showSnackBar(SnackBar(content: Text(exceptionMessage.toString())));
     } catch (e) {
       print("Exception ${e.toString()}");
+    } finally {
+      setState(() {
+        isDownloadingStickers = false;
+      });
     }
   }
 
@@ -53,25 +62,26 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) => Container(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: StickerImage(
-                      size: 100,
-                      imageUrl:
-                          "${BASE_URL}/${widget.stickerPack.identifier}/${widget.stickerPack.stickers![index].imageFile as String}"),
-                ),
-              ),
+                  alignment: Alignment.center,
+                  child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: StickerImage(
+                          size: 100,
+                          imageUrl: getStickerImageUrl(widget.stickerPack,
+                              widget.stickerPack.stickers![index])))),
               childCount: widget.stickerPack.stickers!.length,
             ),
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _addPackToWhatsApp,
-        label: Text(AppLocalizations.of(context)!.add_sticker_pack),
-        icon: const Icon(Icons.add),
-      ),
+      floatingActionButton: !isDownloadingStickers
+          ? FloatingActionButton.extended(
+              onPressed: _addPackToWhatsApp,
+              label: Text(AppLocalizations.of(context)!.add_sticker_pack),
+              icon: const Icon(Icons.add),
+            )
+          : FloatingActionButton(
+              onPressed: () {}, child: const CircularProgressIndicator()),
     );
   }
 }

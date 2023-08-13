@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_pack_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,6 +16,7 @@ class StickersScreen extends StatefulWidget {
 }
 
 class _StickersScreenState extends State<StickersScreen> {
+  static const String CONTENT_DATA_PATH = "${BASE_URL}/${JSON_PATH}";
   bool _isLoading = false;
   late StickerData stickerData;
 
@@ -25,7 +27,9 @@ class _StickersScreenState extends State<StickersScreen> {
     setState(() {
       _isLoading = true;
     });
-    var data = await dio.get("${BASE_URL}/${JSON_PATH}");
+    var contentDataFile =
+        await DefaultCacheManager().getSingleFile(CONTENT_DATA_PATH);
+    var data = await contentDataFile.readAsString();
     setState(() {
       stickerData = StickerData.fromJson(jsonDecode(data.toString()));
       _isLoading = false;
@@ -39,6 +43,7 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   Future<void> _refreshStickers() async {
+    await DefaultCacheManager().removeFile(CONTENT_DATA_PATH);
     _loadStickers();
   }
 
