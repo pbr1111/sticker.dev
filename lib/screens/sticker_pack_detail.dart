@@ -81,7 +81,12 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
               icon: const Icon(Icons.add),
             )
           : FloatingActionButton(
-              onPressed: () {}, child: const CircularProgressIndicator()),
+              onPressed: () {},
+              child: const SizedBox(
+                width: 30,
+                height: 30,
+                child: const CircularProgressIndicator(),
+              )),
     );
   }
 }
