@@ -42,11 +42,11 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
             "${stickersDirectory.path}/${widget.stickerPack.trayImageFile!.toLowerCase()}")
         .path;
 
-    for (var e in widget.stickerPack.stickers!) {
+    for (var sticker in widget.stickerPack.stickers!) {
       var urlPath =
-          "${BASE_URL}${widget.stickerPack.identifier}/${(e.imageFile as String)}";
+          "${BASE_URL}${widget.stickerPack.identifier}/${(sticker.imageFile as String)}";
       var savePath =
-          "${stickersDirectory.path}/${(e.imageFile as String).toLowerCase()}";
+          "${stickersDirectory.path}/${(sticker.imageFile as String).toLowerCase()}";
       downloads.add(
         dio.download(
           urlPath,
@@ -55,8 +55,8 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
       );
 
       stickers[WhatsappStickerImageHandler.fromFile(
-              "${stickersDirectory.path}/${(e.imageFile as String).toLowerCase()}")
-          .path] = e.emojis as List<String>;
+              "${stickersDirectory.path}/${(sticker.imageFile as String).toLowerCase()}")
+          .path] = sticker.emojis as List<String>;
     }
 
     await Future.wait(downloads);
@@ -92,7 +92,7 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar.large(
-            // pinned: true,
+            pinned: true,
             floating: false,
             title: Text(
               widget.stickerPack.name!,
@@ -113,7 +113,7 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
                   child: Sticker(
                       size: 100,
                       imageUrl:
-                          "${BASE_URL}${widget.stickerPack.identifier}/${widget.stickerPack.stickers![index].imageFile as String}"),
+                          "${BASE_URL}/${widget.stickerPack.identifier}/${widget.stickerPack.stickers![index].imageFile as String}"),
                 ),
               ),
               childCount: widget.stickerPack.stickers!.length,

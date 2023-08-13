@@ -1,1 +1,2 @@
-const String BASE_URL = "https://mandj.sfo2.cdn.digitaloceanspaces.com/stickers_test/";
+const String BASE_URL = "https://stickerio.blob.core.windows.net/packs";
+const String JSON_PATH = "sticker_packs.json";

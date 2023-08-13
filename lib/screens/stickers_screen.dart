@@ -19,13 +19,13 @@ class _StickersScreenState extends State<StickersScreen> {
   late StickerData stickerData;
 
   List stickerPacks = [];
-  final Dio dio = Dio(BaseOptions(baseUrl: BASE_URL));
+  final Dio dio = Dio();
 
   Future<void> _loadStickers() async {
     setState(() {
       _isLoading = true;
     });
-    var data = await dio.get("contents.json");
+    var data = await dio.get("${BASE_URL}/${JSON_PATH}");
     setState(() {
       stickerData = StickerData.fromJson(jsonDecode(data.toString()));
       _isLoading = false;
