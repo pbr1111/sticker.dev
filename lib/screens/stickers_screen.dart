@@ -16,18 +16,17 @@ class StickersScreen extends StatefulWidget {
 
 class _StickersScreenState extends State<StickersScreen> {
   bool _isLoading = false;
-
   late StickerData stickerData;
 
   List stickerPacks = [];
-  List installedStickerPacks = [];
-  late Dio dio;
-  var downloads = <Future>[];
-  var data;
+  final Dio dio = Dio(BaseOptions(baseUrl: BASE_URL));
 
-  void _loadStickers() async {
-    dio = Dio();
-    data = await dio.get("${BASE_URL}contents.json");
+  Future<void> _loadStickers() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(Duration(seconds: 5));
+    var data = await dio.get("contents.json");
     setState(() {
       stickerData = StickerData.fromJson(jsonDecode(data.toString()));
       _isLoading = false;
@@ -35,19 +34,16 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   @override
-  didChangeDependencies() {
-    setState(() {
-      _isLoading = true;
-    });
+  initState() async {
+    super.initState();
+    await _loadStickers();
+  }
+
+  Future<void> _refreshStickers() async {
     _loadStickers();
-    super.didChangeDependencies();
   }
 
   void _searchStickers() {}
-
-  Future<void> _pullRefresh() async {
-    _loadStickers();
-  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,11 +58,12 @@ class _StickersScreenState extends State<StickersScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _pullRefresh,
-              child: ListView.builder(
+      body: RefreshIndicator(
+          onRefresh: _refreshStickers,
+          child: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator()) // TODO Add skeleton
+              : ListView.builder(
                   itemCount: stickerData.stickerPacks!.length,
                   itemBuilder: (context, index) => StickerPackItem(
                         stickerPack: stickerData.stickerPacks![index],
