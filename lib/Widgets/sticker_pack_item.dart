@@ -5,7 +5,7 @@ import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_image.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
-import '../screens/sticker_pack_detail.dart';
+import '../screens/sticker_pack_screen.dart';
 
 class StickerPackItem extends StatelessWidget {
   final StickerPack stickerPack;
@@ -44,12 +44,10 @@ class StickerPackItem extends StatelessWidget {
       child: SizedBox(
         child: ListTile(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => StickerPackDetailScreen(
-                          stickerPack: stickerPack,
-                        )));
+            Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                builder: (context) => StickerPackScreen(
+                      stickerPack: stickerPack,
+                    )));
           },
           title: Text(stickerPack.name ?? ""),
           subtitle: Text(stickerPack.publisher ?? ""),

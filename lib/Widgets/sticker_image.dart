@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -11,24 +12,17 @@ class StickerImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.fill,
-      height: size ?? DEFAULT_SIZE,
-      width: size ?? DEFAULT_SIZE,
-      loadingBuilder: (BuildContext context, Widget child,
-          ImageChunkEvent? loadingProgress) {
-        if (loadingProgress == null) return child;
-        return SizedBox(
-            height: size ?? DEFAULT_SIZE,
-            width: size ?? DEFAULT_SIZE,
-            child: Shimmer.fromColors(
-                baseColor: Theme.of(context).focusColor,
-                highlightColor: Theme.of(context).hoverColor,
-                child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white))));
-      },
-    );
+    return CachedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.fill,
+        height: size ?? DEFAULT_SIZE,
+        width: size ?? DEFAULT_SIZE,
+        fadeOutDuration: Duration(milliseconds: 100),
+        placeholder: (_, _2) => Shimmer.fromColors(
+            baseColor: Theme.of(context).focusColor,
+            highlightColor: Theme.of(context).hoverColor,
+            child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.white))));
   }
 }
