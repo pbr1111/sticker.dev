@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sticker_dev/screens/profile_screen.dart';
+import 'package:sticker_dev/screens/sticker_create_screen.dart';
+import 'package:sticker_dev/screens/stickers_saved_screen.dart';
 import 'screens/stickers_screen.dart';
 
 void main() {
@@ -50,8 +53,9 @@ class _MainScreenState extends State<MainScreen> {
 
   static const List<Widget> _widgetOptions = [
     const StickersScreen(),
-    const StickersScreen(),
-    const StickersScreen()
+    const StickerCreateScreen(),
+    const StickersSavedScreen(),
+    const ProfileScreen()
   ];
 
   @override
@@ -66,17 +70,24 @@ class _MainScreenState extends State<MainScreen> {
         selectedIndex: _selectedTabIndex,
         destinations: [
           NavigationDestination(
-            icon: Icon(Icons.explore),
+            selectedIcon: Icon(Icons.explore),
+            icon: Icon(Icons.explore_outlined),
             label: AppLocalizations.of(context)!.explore,
           ),
           NavigationDestination(
+            selectedIcon: Icon(Icons.add_circle),
             icon: Icon(Icons.add),
-            label: AppLocalizations.of(context)!.add,
+            label: AppLocalizations.of(context)!.create,
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.bookmark),
-            icon: Icon(Icons.bookmark_border),
+            icon: Icon(Icons.bookmark_outline),
             label: AppLocalizations.of(context)!.saved,
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle_outlined),
+            label: AppLocalizations.of(context)!.profile,
           ),
         ],
       ),

@@ -3,8 +3,10 @@
   "explore": "Explore",
   "add": "Add",
   "remove": "Remove",
-  "saved": "Saved",
   "search": "Search",
   "add_sticker_pack": "Add to WhatsApp",
-  "sticker_added": "Sticker added"
+  "sticker_added": "Sticker added",
+  "create": "Create",
+  "saved": "Saved",
+  "profile": "Profile"
 }

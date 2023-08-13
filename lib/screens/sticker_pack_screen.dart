@@ -7,18 +7,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../helpers/path_helpers.dart';
 import '../widgets/sticker_image.dart';
 
-class StickerPackDetailScreen extends StatefulWidget {
+class StickerPackScreen extends StatefulWidget {
   final StickerPack stickerPack;
 
-  const StickerPackDetailScreen({Key? key, required this.stickerPack})
+  const StickerPackScreen({Key? key, required this.stickerPack})
       : super(key: key);
 
   @override
-  State<StickerPackDetailScreen> createState() =>
-      _StickerPackDetailScreenState();
+  State<StickerPackScreen> createState() => _StickerPackScreenState();
 }
 
-class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
+class _StickerPackScreenState extends State<StickerPackScreen> {
   bool isDownloadingStickers = false;
 
   Future<void> _addPackToWhatsApp() async {

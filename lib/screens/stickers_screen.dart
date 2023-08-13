@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_pack_item.dart';
@@ -19,9 +18,6 @@ class _StickersScreenState extends State<StickersScreen> {
   static const String CONTENT_DATA_PATH = "${BASE_URL}/${JSON_PATH}";
   bool _isLoading = false;
   late StickerData stickerData;
-
-  List stickerPacks = [];
-  final Dio dio = Dio();
 
   Future<void> _loadStickers() async {
     setState(() {
