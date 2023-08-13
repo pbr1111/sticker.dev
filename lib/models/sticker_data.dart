@@ -1,7 +1,7 @@
 class StickerData {
   String? androidPlayStoreLink;
   String? iosAppStoreLink;
-  List<StickerPacks>? stickerPacks;
+  List<StickerPack>? stickerPacks;
 
   StickerData(
       {this.androidPlayStoreLink, this.iosAppStoreLink, this.stickerPacks});
@@ -10,9 +10,9 @@ class StickerData {
     androidPlayStoreLink = json['android_play_store_link'];
     iosAppStoreLink = json['ios_app_store_link'];
     if (json['sticker_packs'] != null) {
-      stickerPacks = <StickerPacks>[];
+      stickerPacks = <StickerPack>[];
       json['sticker_packs'].forEach((v) {
-        stickerPacks!.add(StickerPacks.fromJson(v));
+        stickerPacks!.add(StickerPack.fromJson(v));
       });
     }
   }
@@ -33,7 +33,7 @@ class StickerData {
   }
 }
 
-class StickerPacks {
+class StickerPack {
   String? identifier;
   String? name;
   String? publisher;
@@ -44,25 +44,25 @@ class StickerPacks {
   String? publisherWebsite;
   String? privacyPolicyWebsite;
   String? licenseAgreementWebsite;
-  List<Stickers>? stickers;
+  List<Sticker>? stickers;
   bool? animatedStickerPack;
   bool isInstalled = false;
 
-  StickerPacks(
+  StickerPack(
       {this.identifier,
-        this.name,
-        this.publisher,
-        this.trayImageFile,
-        this.imageDataVersion,
-        this.avoidCache,
-        this.publisherEmail,
-        this.publisherWebsite,
-        this.privacyPolicyWebsite,
-        this.licenseAgreementWebsite,
-        this.stickers,
-        this.animatedStickerPack});
+      this.name,
+      this.publisher,
+      this.trayImageFile,
+      this.imageDataVersion,
+      this.avoidCache,
+      this.publisherEmail,
+      this.publisherWebsite,
+      this.privacyPolicyWebsite,
+      this.licenseAgreementWebsite,
+      this.stickers,
+      this.animatedStickerPack});
 
-  StickerPacks.fromJson(Map<String, dynamic> json) {
+  StickerPack.fromJson(Map<String, dynamic> json) {
     identifier = json['identifier'];
     name = json['name'];
     publisher = json['publisher'];
@@ -74,9 +74,9 @@ class StickerPacks {
     privacyPolicyWebsite = json['privacy_policy_website'];
     licenseAgreementWebsite = json['license_agreement_website'];
     if (json['stickers'] != null) {
-      stickers = <Stickers>[];
+      stickers = <Sticker>[];
       json['stickers'].forEach((v) {
-        stickers!.add(Stickers.fromJson(v));
+        stickers!.add(Sticker.fromJson(v));
       });
     }
     animatedStickerPack = json['animated_sticker_pack'];
@@ -108,13 +108,13 @@ class StickerPacks {
   }
 }
 
-class Stickers {
+class Sticker {
   String? imageFile;
   List<String>? emojis;
 
-  Stickers({this.imageFile, this.emojis});
+  Sticker({this.imageFile, this.emojis});
 
-  Stickers.fromJson(Map<String, dynamic> json) {
+  Sticker.fromJson(Map<String, dynamic> json) {
     imageFile = json['image_file'];
     emojis = json['emojis'].cast<String>();
   }

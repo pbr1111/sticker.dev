@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sticker_dev/widgets/sticker.dart';
-import 'package:sticker_dev/constants/constants.dart';
+import 'package:sticker_dev/helpers/path_helpers.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
+import 'package:sticker_dev/widgets/sticker_image.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
 import '../screens/sticker_pack_detail.dart';
 
 class StickerPackItem extends StatelessWidget {
-  final StickerPacks stickerPack;
+  final StickerPack stickerPack;
 
   StickerPackItem({
     Key? key,
@@ -53,10 +53,8 @@ class StickerPackItem extends StatelessWidget {
           },
           title: Text(stickerPack.name ?? ""),
           subtitle: Text(stickerPack.publisher ?? ""),
-          leading: Sticker(
-              imageUrl:
-                  '${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}',
-              size: 50),
+          leading:
+              StickerImage(imageUrl: getStickerTrayUrl(stickerPack), size: 50),
           trailing: FutureBuilder(
               future: _whatsappStickersHandler
                   .isStickerPackInstalled(stickerPack.identifier as String),

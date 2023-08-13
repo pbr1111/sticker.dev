@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class Sticker extends StatelessWidget {
+class StickerImage extends StatelessWidget {
   static const double DEFAULT_SIZE = 70;
 
   final String imageUrl;
   final double? size;
 
-  Sticker({Key? key, required this.imageUrl, this.size}) : super(key: key);
+  StickerImage({Key? key, required this.imageUrl, this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
