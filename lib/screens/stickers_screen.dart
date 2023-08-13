@@ -56,9 +56,9 @@ class _StickersScreenState extends State<StickersScreen> {
       appBar: AppBar(
         title: Text("Sticker.dev"),
         centerTitle: true,
-        actions: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.search),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
             tooltip: 'Search',
             onPressed: _searchStickers,
           ),

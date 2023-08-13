@@ -19,14 +19,11 @@ class StickerPackItem extends StatelessWidget {
       bool isInstalled, WhatsappStickersHandler _whatsappStickersHandler) {
     stickerPack.isInstalled = isInstalled;
 
-    return IconButton(
+    return TextButton.icon(
       icon: Icon(
         isInstalled ? Icons.check : Icons.add,
       ),
-      // color: Colors.teal,
-      tooltip: isInstalled
-          ? 'Add Sticker to WhatsApp'
-          : 'Sticker is added to WhatsApp',
+      label: const Text("Add"),
       onPressed: () async {
         Map<String, List<String>> stickers = <String, List<String>>{};
         var tryImage = '';
