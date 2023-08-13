@@ -44,7 +44,7 @@ class _StickerPackDetailScreenState extends State<StickerPackDetailScreen> {
 
     for (var sticker in widget.stickerPack.stickers!) {
       var urlPath =
-          "${BASE_URL}${widget.stickerPack.identifier}/${(sticker.imageFile as String)}";
+          "${BASE_URL}/${widget.stickerPack.identifier}/${(sticker.imageFile as String)}";
       var savePath =
           "${stickersDirectory.path}/${(sticker.imageFile as String).toLowerCase()}";
       downloads.add(
