@@ -7,8 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:sticker_dev/widgets/sticker_pack_item.dart';
 
 class StickersScreen extends StatefulWidget {
-  static const routeName = '/';
-
   const StickersScreen({Key? key}) : super(key: key);
 
   @override
@@ -51,22 +49,29 @@ class _StickersScreenState extends State<StickersScreen> {
     super.didChangeDependencies();
   }
 
+  void _searchStickers() {}
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Sticker.dev"),
+        centerTitle: true,
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: _searchStickers,
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: stickerData.stickerPacks!.length,
-              itemBuilder: (context, index) {
-                return StickerPackItem(
-                  stickerPack: stickerData.stickerPacks![index],
-                  stickerFetchType: stickerFetchType,
-                );
-              },
-            ),
+              itemBuilder: (context, index) => StickerPackItem(
+                    stickerPack: stickerData.stickerPacks![index],
+                    stickerFetchType: stickerFetchType,
+                  )),
     );
   }
 }

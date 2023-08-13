@@ -9,9 +9,12 @@ import 'package:dio/dio.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 
 class StickerPackInfoScreen extends StatefulWidget {
-  static const routeName = '/sticker-pack-info';
+  final StickerPacks stickerPack;
+  final String stickerFetchType;
 
-  const StickerPackInfoScreen({Key? key}) : super(key: key);
+  const StickerPackInfoScreen(
+      {Key? key, required this.stickerPack, required this.stickerFetchType})
+      : super(key: key);
 
   @override
   State<StickerPackInfoScreen> createState() => _StickerPackInfoScreenState();
@@ -22,10 +25,10 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)?.settings.arguments as Map;
+    // final arguments = ModalRoute.of(context)?.settings.arguments as Map;
 
-    final StickerPacks stickerPack = arguments['stickerPack'] as StickerPacks;
-    final String stickerFetchType = arguments['stickerFetchType'] as String;
+    // final StickerPacks stickerPack = arguments['stickerPack'] as StickerPacks;
+    // final String stickerFetchType = arguments['stickerFetchType'] as String;
 
     List<Widget> fakeBottomButtons = [];
     fakeBottomButtons.add(
@@ -34,7 +37,7 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
       ),
     );
     Widget depInstallWidget;
-    if (stickerPack.isInstalled) {
+    if (widget.stickerPack.isInstalled) {
       depInstallWidget = const Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Text(
@@ -49,14 +52,14 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
         onPressed: () async {
           Map<String, List<String>> stickers = <String, List<String>>{};
           var tryImage = '';
-          if (stickerFetchType == 'staticStickers') {
-            for (var e in stickerPack.stickers!) {
+          if (widget.stickerFetchType == 'staticStickers') {
+            for (var e in widget.stickerPack.stickers!) {
               stickers[WhatsappStickerImageHandler.fromAsset(
-                      "sticker_packs/${stickerPack.identifier}/${e.imageFile as String}")
+                      "sticker_packs/${widget.stickerPack.identifier}/${e.imageFile as String}")
                   .path] = e.emojis as List<String>;
             }
             tryImage = WhatsappStickerImageHandler.fromAsset(
-                    "sticker_packs/${stickerPack.identifier}/${stickerPack.trayImageFile}")
+                    "sticker_packs/${widget.stickerPack.identifier}/${widget.stickerPack.trayImageFile}")
                 .path;
           } else {
             final dio = Dio();
@@ -64,23 +67,23 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
             var applicationDocumentsDirectory =
                 await getApplicationDocumentsDirectory();
             var stickersDirectory = Directory(
-                //'${applicationDocumentsDirectory.path}/stickers/${stickerPack.identifier}');
-                '${applicationDocumentsDirectory.path}/${stickerPack.identifier}');
+                //'${applicationDocumentsDirectory.path}/stickers/${widget.stickerPack.identifier}');
+                '${applicationDocumentsDirectory.path}/${widget.stickerPack.identifier}');
             await stickersDirectory.create(recursive: true);
 
             downloads.add(
               dio.download(
-                "${BASE_URL}${stickerPack.identifier}/${stickerPack.trayImageFile}",
-                "${stickersDirectory.path}/${stickerPack.trayImageFile!.toLowerCase()}",
+                "${BASE_URL}${widget.stickerPack.identifier}/${widget.stickerPack.trayImageFile}",
+                "${stickersDirectory.path}/${widget.stickerPack.trayImageFile!.toLowerCase()}",
               ),
             );
             tryImage = WhatsappStickerImageHandler.fromFile(
-                    "${stickersDirectory.path}/${stickerPack.trayImageFile!.toLowerCase()}")
+                    "${stickersDirectory.path}/${widget.stickerPack.trayImageFile!.toLowerCase()}")
                 .path;
 
-            for (var e in stickerPack.stickers!) {
+            for (var e in widget.stickerPack.stickers!) {
               var urlPath =
-                  "${BASE_URL}${stickerPack.identifier}/${(e.imageFile as String)}";
+                  "${BASE_URL}${widget.stickerPack.identifier}/${(e.imageFile as String)}";
               var savePath =
                   "${stickersDirectory.path}/${(e.imageFile as String).toLowerCase()}";
               downloads.add(
@@ -102,14 +105,14 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
             final WhatsappStickersHandler _whatsappStickersHandler =
                 WhatsappStickersHandler();
             var result = await _whatsappStickersHandler.addStickerPack(
-              stickerPack.identifier,
-              stickerPack.name as String,
-              stickerPack.publisher as String,
+              widget.stickerPack.identifier,
+              widget.stickerPack.name as String,
+              widget.stickerPack.publisher as String,
               tryImage,
-              stickerPack.publisherWebsite,
-              stickerPack.privacyPolicyWebsite,
-              stickerPack.licenseAgreementWebsite,
-              stickerPack.animatedStickerPack ?? false,
+              widget.stickerPack.publisherWebsite,
+              widget.stickerPack.privacyPolicyWebsite,
+              widget.stickerPack.licenseAgreementWebsite,
+              widget.stickerPack.animatedStickerPack ?? false,
               stickers,
             );
             print("RESULT $result");
@@ -127,55 +130,26 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(stickerPack.name.toString() + " Stickers"),
+        title: Text(widget.stickerPack.name.toString() + " Stickers"),
       ),
       body: Column(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                TextButton(
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Text(
-                  "All Stickers",
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: stickerFetchType == "remoteStickers"
+                child: widget.stickerFetchType == "remoteStickers"
                     ? FadeInImage(
                         placeholder:
                             const AssetImage("assets/images/loading.gif"),
                         image: NetworkImage(
-                            "${BASE_URL}/${stickerPack.identifier}/${stickerPack.trayImageFile}"),
+                            "${BASE_URL}/${widget.stickerPack.identifier}/${widget.stickerPack.trayImageFile}"),
                         height: 100,
                         width: 100,
                       )
                     : Image.asset(
-                        "sticker_packs/${stickerPack.identifier}/${stickerPack.trayImageFile}",
+                        "sticker_packs/${widget.stickerPack.identifier}/${widget.stickerPack.trayImageFile}",
                         width: 100,
                         height: 100,
                       ),
@@ -187,7 +161,7 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      stickerPack.name as String,
+                      widget.stickerPack.name as String,
                       style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -195,7 +169,7 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
                       ),
                     ),
                     Text(
-                      stickerPack.publisher as String,
+                      widget.stickerPack.publisher as String,
                       style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.black54,
@@ -213,19 +187,19 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
                 crossAxisCount: 4,
                 childAspectRatio: 1,
               ),
-              itemCount: stickerPack.stickers!.length,
+              itemCount: widget.stickerPack.stickers!.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: stickerFetchType == "remoteStickers"
+                  child: widget.stickerFetchType == "remoteStickers"
                       ? FadeInImage(
                           placeholder:
                               const AssetImage("assets/images/loading.gif"),
                           image: NetworkImage(
-                              "${BASE_URL}${stickerPack.identifier}/${stickerPack.stickers![index].imageFile as String}"),
+                              "${BASE_URL}${widget.stickerPack.identifier}/${widget.stickerPack.stickers![index].imageFile as String}"),
                         )
                       : Image.asset(
-                          "sticker_packs/${stickerPack.identifier}/${stickerPack.stickers![index].imageFile as String}"),
+                          "sticker_packs/${widget.stickerPack.identifier}/${widget.stickerPack.stickers![index].imageFile as String}"),
                 );
               },
             ),

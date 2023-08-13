@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
 class InformationScreen extends StatefulWidget {
-  static const routeName = 'information';
-
   const InformationScreen({Key? key}) : super(key: key);
 
   @override
@@ -41,9 +39,9 @@ class _InformationScreenState extends State<InformationScreen> {
 
     bool whatsAppInstalled = await WhatsappStickersHandler.isWhatsAppInstalled;
     bool whatsAppConsumerAppInstalled =
-    await WhatsappStickersHandler.isWhatsAppConsumerAppInstalled;
+        await WhatsappStickersHandler.isWhatsAppConsumerAppInstalled;
     bool whatsAppSmbAppInstalled =
-    await WhatsappStickersHandler.isWhatsAppSmbAppInstalled;
+        await WhatsappStickersHandler.isWhatsAppSmbAppInstalled;
 
     setState(() {
       _platformVersion = platformVersion;

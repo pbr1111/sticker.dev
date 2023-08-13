@@ -8,6 +8,7 @@ import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 class StickerPackItem extends StatelessWidget {
   final StickerPacks stickerPack;
   final String stickerFetchType;
+
   StickerPackItem({
     Key? key,
     required this.stickerPack,
@@ -22,7 +23,7 @@ class StickerPackItem extends StatelessWidget {
       icon: Icon(
         isInstalled ? Icons.check : Icons.add,
       ),
-      color: Colors.teal,
+      // color: Colors.teal,
       tooltip: isInstalled
           ? 'Add Sticker to WhatsApp'
           : 'Sticker is added to WhatsApp',
@@ -65,11 +66,13 @@ class StickerPackItem extends StatelessWidget {
       child: SizedBox(
         child: ListTile(
           onTap: () {
-            Navigator.of(context)
-                .pushNamed(StickerPackInfoScreen.routeName, arguments: {
-              'stickerPack': stickerPack,
-              'stickerFetchType': stickerFetchType,
-            });
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StickerPackInfoScreen(
+                          stickerPack: stickerPack,
+                          stickerFetchType: stickerFetchType,
+                        )));
           },
           title: Text(stickerPack.name ?? ""),
           subtitle: Text(stickerPack.publisher ?? ""),
@@ -87,7 +90,10 @@ class StickerPackItem extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                 return snapshot.connectionState == ConnectionState.waiting ||
                         snapshot.data == null
-                    ? const Text("+")
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: const CircularProgressIndicator())
                     : addStickerPackButton(
                         snapshot.data as bool,
                         _whatsappStickersHandler,
