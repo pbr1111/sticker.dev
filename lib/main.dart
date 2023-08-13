@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'screens/stickers_screen.dart';
 
 enum PopupMenuOptions {
@@ -30,6 +31,15 @@ class NavigationBarApp extends StatelessWidget {
           colorSchemeSeed: Colors.green[700],
         ),
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en'), // English
+        ],
         home: MainScreen());
   }
 }
@@ -60,19 +70,19 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         selectedIndex: _selectedTabIndex,
-        destinations: const [
+        destinations: [
           NavigationDestination(
             icon: Icon(Icons.explore),
-            label: 'Explore',
+            label: AppLocalizations.of(context)!.explore,
           ),
           NavigationDestination(
-            icon: Icon(Icons.commute),
-            label: 'Commute',
+            icon: Icon(Icons.add),
+            label: AppLocalizations.of(context)!.add,
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.bookmark),
             icon: Icon(Icons.bookmark_border),
-            label: 'Saved',
+            label: AppLocalizations.of(context)!.saved,
           ),
         ],
       ),

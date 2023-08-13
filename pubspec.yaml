@@ -31,6 +31,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: 
+      sdk: flutter
+  intl: any
   whatsapp_stickers_handler:
     path: ./plugins/whatsapp_stickers_handler
   url_launcher: ^6.1.6
@@ -54,7 +57,7 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sticker_dev/constants/constants.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/screens/sticker_pack_info.dart';
@@ -15,15 +16,18 @@ class StickerPackItem extends StatelessWidget {
     required this.stickerFetchType,
   }) : super(key: key);
 
-  Widget addStickerPackButton(
-      bool isInstalled, WhatsappStickersHandler _whatsappStickersHandler) {
+  Widget addStickerPackButton(BuildContext context, bool isInstalled,
+      WhatsappStickersHandler _whatsappStickersHandler) {
     stickerPack.isInstalled = isInstalled;
 
+    // TODO Review the behavior of this button (add/check?)
     return TextButton.icon(
       icon: Icon(
         isInstalled ? Icons.check : Icons.add,
       ),
-      label: const Text("Add"),
+      label: Text(isInstalled
+          ? AppLocalizations.of(context)!.remove
+          : AppLocalizations.of(context)!.add),
       onPressed: () async {
         Map<String, List<String>> stickers = <String, List<String>>{};
         var tryImage = '';
@@ -92,6 +96,7 @@ class StickerPackItem extends StatelessWidget {
                         height: 20,
                         child: const CircularProgressIndicator())
                     : addStickerPackButton(
+                        context,
                         snapshot.data as bool,
                         _whatsappStickersHandler,
                       );

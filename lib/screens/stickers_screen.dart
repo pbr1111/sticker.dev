@@ -5,6 +5,7 @@ import 'package:sticker_dev/constants/constants.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:dio/dio.dart';
 import 'package:sticker_dev/widgets/sticker_pack_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StickersScreen extends StatefulWidget {
   const StickersScreen({Key? key}) : super(key: key);
@@ -54,12 +55,12 @@ class _StickersScreenState extends State<StickersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sticker.dev"),
+        title: Text(AppLocalizations.of(context)!.title),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Search',
+            tooltip: AppLocalizations.of(context)!.search,
             onPressed: _searchStickers,
           ),
         ],

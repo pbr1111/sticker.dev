@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sticker_dev/constants/constants.dart';
 import 'package:whatsapp_stickers_handler/exceptions.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
@@ -38,17 +39,17 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
     );
     Widget depInstallWidget;
     if (widget.stickerPack.isInstalled) {
-      depInstallWidget = const Padding(
+      depInstallWidget = Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Text(
-          "Sticker Added",
+          AppLocalizations.of(context)!.sticker_added,
           style: TextStyle(
               color: Colors.green, fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
       );
     } else {
       depInstallWidget = ElevatedButton(
-        child: const Text("Add Sticker"),
+        child: Text(AppLocalizations.of(context)!.add_sticker),
         onPressed: () async {
           Map<String, List<String>> stickers = <String, List<String>>{};
           var tryImage = '';
@@ -130,7 +131,7 @@ class _StickerPackInfoScreenState extends State<StickerPackInfoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.stickerPack.name.toString() + " Stickers"),
+        title: Text(widget.stickerPack.name.toString()),
       ),
       body: Column(
         children: <Widget>[
