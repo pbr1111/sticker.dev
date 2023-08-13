@@ -25,7 +25,6 @@ class _StickersScreenState extends State<StickersScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 5));
     var data = await dio.get("contents.json");
     setState(() {
       stickerData = StickerData.fromJson(jsonDecode(data.toString()));
