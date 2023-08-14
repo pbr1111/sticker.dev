@@ -53,25 +53,27 @@ class _StickerPackScreenState extends State<StickerPackScreen> {
             ),
             leading: BackButton(),
           ),
-          SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) => Container(
-                  alignment: Alignment.center,
-                  child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: StickerImage(
-                              stickerPath: widget
-                                  .stickerPack.stickers[index].imageRef)))),
-              childCount: widget.stickerPack.stickers.length,
-            ),
-          )
+          SliverPadding(
+              padding: EdgeInsets.only(bottom: 80),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => Container(
+                      alignment: Alignment.center,
+                      child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: StickerImage(
+                                  stickerPath: widget
+                                      .stickerPack.stickers[index].imageRef)))),
+                  childCount: widget.stickerPack.stickers.length,
+                ),
+              ))
         ],
       ),
       floatingActionButton: !isDownloadingStickers
