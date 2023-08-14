@@ -37,7 +37,6 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   Future<void> _refreshStickers() async {
-    // await DefaultCacheManager().removeFile(CONTENT_DATA_PATH);
     _loadStickers();
   }
 

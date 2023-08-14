@@ -67,7 +67,7 @@ class _StickerPackScreenState extends State<StickerPackScreen> {
                           height: 100,
                           width: 100,
                           child: StickerImage(
-                              imageRef: widget
+                              stickerPath: widget
                                   .stickerPack.stickers[index].imageRef)))),
               childCount: widget.stickerPack.stickers.length,
             ),
