@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:sticker_dev/helpers/path_helpers.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_image.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
@@ -49,13 +48,15 @@ class StickerPackItem extends StatelessWidget {
                       stickerPack: stickerPack,
                     )));
           },
-          title: Text(stickerPack.name ?? ""),
-          subtitle: Text(stickerPack.publisher ?? ""),
-          leading:
-              StickerImage(imageUrl: getStickerTrayUrl(stickerPack), size: 50),
+          title: Text(stickerPack.name),
+          subtitle: Text(stickerPack.publisher),
+          leading: SizedBox(
+              width: 50,
+              height: 50,
+              child: StickerImage(imageRef: stickerPack.trayImageRef)),
           trailing: FutureBuilder(
               future: _whatsappStickersHandler
-                  .isStickerPackInstalled(stickerPack.identifier as String),
+                  .isStickerPackInstalled(stickerPack.identifier),
               builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                 return snapshot.connectionState == ConnectionState.waiting ||
                         snapshot.data == null

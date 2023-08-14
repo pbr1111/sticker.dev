@@ -1,128 +1,94 @@
-class StickerData {
-  String? androidPlayStoreLink;
-  String? iosAppStoreLink;
-  List<StickerPack>? stickerPacks;
-
-  StickerData(
-      {this.androidPlayStoreLink, this.iosAppStoreLink, this.stickerPacks});
-
-  StickerData.fromJson(Map<String, dynamic> json) {
-    androidPlayStoreLink = json['android_play_store_link'];
-    iosAppStoreLink = json['ios_app_store_link'];
-    if (json['sticker_packs'] != null) {
-      stickerPacks = <StickerPack>[];
-      json['sticker_packs'].forEach((v) {
-        stickerPacks!.add(StickerPack.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['android_play_store_link'] = androidPlayStoreLink;
-    data['ios_app_store_link'] = iosAppStoreLink;
-    if (stickerPacks != null) {
-      data['sticker_packs'] = stickerPacks!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
-  @override
-  String toString() {
-    return "androidPlayStoreLink: $androidPlayStoreLink, iosAppStoreLink: $iosAppStoreLink";
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StickerPack {
-  String? identifier;
-  String? name;
-  String? publisher;
-  String? trayImageFile;
-  String? imageDataVersion;
-  bool? avoidCache;
-  String? publisherEmail;
-  String? publisherWebsite;
-  String? privacyPolicyWebsite;
-  String? licenseAgreementWebsite;
-  List<Sticker>? stickers;
+  String identifier;
+  String name;
+  String publisher;
+  String trayImageFile;
+  String trayImageRef;
+  String imageDataVersion;
+  String publisherEmail;
+  String publisherWebsite;
+  String privacyPolicyWebsite;
+  String licenseAgreementWebsite;
+  List<Sticker> stickers = [];
   bool? animatedStickerPack;
   bool isInstalled = false;
 
   StickerPack(
-      {this.identifier,
-      this.name,
-      this.publisher,
-      this.trayImageFile,
-      this.imageDataVersion,
-      this.avoidCache,
-      this.publisherEmail,
-      this.publisherWebsite,
-      this.privacyPolicyWebsite,
-      this.licenseAgreementWebsite,
-      this.stickers,
+      {required this.identifier,
+      required this.name,
+      required this.publisher,
+      required this.trayImageFile,
+      required this.trayImageRef,
+      required this.imageDataVersion,
+      required this.publisherEmail,
+      required this.publisherWebsite,
+      required this.privacyPolicyWebsite,
+      required this.licenseAgreementWebsite,
+      required this.stickers,
       this.animatedStickerPack});
 
-  StickerPack.fromJson(Map<String, dynamic> json) {
-    identifier = json['identifier'];
-    name = json['name'];
-    publisher = json['publisher'];
-    trayImageFile = json['tray_image_file'];
-    imageDataVersion = json['image_data_version'];
-    avoidCache = json['avoid_cache'];
-    publisherEmail = json['publisher_email'];
-    publisherWebsite = json['publisher_website'];
-    privacyPolicyWebsite = json['privacy_policy_website'];
-    licenseAgreementWebsite = json['license_agreement_website'];
-    if (json['stickers'] != null) {
-      stickers = <Sticker>[];
-      json['stickers'].forEach((v) {
-        stickers!.add(Sticker.fromJson(v));
-      });
-    }
-    animatedStickerPack = json['animated_sticker_pack'];
+  factory StickerPack.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data();
+    return StickerPack(
+      identifier: snapshot.reference.id,
+      name: data!['name'],
+      publisher: data['publisher'],
+      trayImageFile: data['tray_image_file'],
+      trayImageRef: data['tray_image_ref'],
+      imageDataVersion: data['image_data_version'],
+      publisherEmail: data['publisher_email'],
+      publisherWebsite: data['publisher_website'],
+      privacyPolicyWebsite: data['privacy_policy_website'],
+      licenseAgreementWebsite: data['license_agreement_website'],
+      stickers: List.from(data['stickers'])
+          .map((e) => Sticker.fromFirestore(e))
+          .toList(),
+      animatedStickerPack: data['animated_sticker_pack'],
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['identifier'] = identifier;
-    data['name'] = name;
-    data['publisher'] = publisher;
-    data['tray_image_file'] = trayImageFile;
-    data['image_data_version'] = imageDataVersion;
-    data['avoid_cache'] = avoidCache;
-    data['publisher_email'] = publisherEmail;
-    data['publisher_website'] = publisherWebsite;
-    data['privacy_policy_website'] = privacyPolicyWebsite;
-    data['license_agreement_website'] = licenseAgreementWebsite;
-    if (stickers != null) {
-      data['stickers'] = stickers!.map((v) => v.toJson()).toList();
-    }
-    data['animated_sticker_pack'] = animatedStickerPack;
-    return data;
+  Map<String, dynamic> toFirestore() {
+    return {
+      'identifier': identifier,
+      'name': name,
+      'publisher': publisher,
+      'tray_image_file': trayImageRef,
+      'image_data_version': imageDataVersion,
+      'publisher_email': publisherEmail,
+      'publisher_website': publisherWebsite,
+      'privacy_policy_website': privacyPolicyWebsite,
+      'license_agreement_website': licenseAgreementWebsite,
+      'stickers': stickers.map((v) => v.toFirestore()).toList(),
+      'animated_sticker_pack': animatedStickerPack,
+    };
   }
 
   @override
   String toString() {
-    // TODO: implement toString
     return "identifier: $identifier, name: $name, publisher: $publisher";
   }
 }
 
 class Sticker {
-  String? imageFile;
-  List<String>? emojis;
+  final String imageFile;
+  final String imageRef;
+  final List<String> emojis;
 
-  Sticker({this.imageFile, this.emojis});
+  Sticker(
+      {required this.imageFile, required this.imageRef, required this.emojis});
 
-  Sticker.fromJson(Map<String, dynamic> json) {
-    imageFile = json['image_file'];
-    emojis = json['emojis'].cast<String>();
+  factory Sticker.fromFirestore(Map<String, dynamic> data) {
+    return Sticker(
+      imageFile: data['image_file'],
+      imageRef: data['image_ref'],
+      emojis: List.from(data['emojis']),
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['image_file'] = imageFile;
-    data['emojis'] = emojis;
-    return data;
+  Map<String, dynamic> toFirestore() {
+    return {'image_file': imageFile, 'emojis': emojis};
   }
 }

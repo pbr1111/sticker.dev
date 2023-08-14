@@ -1,11 +1,8 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_pack_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../constants/constants.dart';
 
 class StickersScreen extends StatefulWidget {
   const StickersScreen({Key? key}) : super(key: key);
@@ -15,19 +12,20 @@ class StickersScreen extends StatefulWidget {
 }
 
 class _StickersScreenState extends State<StickersScreen> {
-  static const String CONTENT_DATA_PATH = "${BASE_URL}/${JSON_PATH}";
+  final _collectionRef = FirebaseFirestore.instance.collection("sticker_packs");
   bool _isLoading = false;
-  late StickerData stickerData;
+  late List<StickerPack> _stickerPacks;
 
   Future<void> _loadStickers() async {
     setState(() {
       _isLoading = true;
     });
-    var contentDataFile =
-        await DefaultCacheManager().getSingleFile(CONTENT_DATA_PATH);
-    var data = await contentDataFile.readAsString();
+    var querySnapshot = await _collectionRef.get();
+    var allData = querySnapshot.docs
+        .map((doc) => StickerPack.fromFirestore(doc))
+        .toList();
     setState(() {
-      stickerData = StickerData.fromJson(jsonDecode(data.toString()));
+      _stickerPacks = allData;
       _isLoading = false;
     });
   }
@@ -39,7 +37,7 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   Future<void> _refreshStickers() async {
-    await DefaultCacheManager().removeFile(CONTENT_DATA_PATH);
+    // await DefaultCacheManager().removeFile(CONTENT_DATA_PATH);
     _loadStickers();
   }
 
@@ -64,9 +62,10 @@ class _StickersScreenState extends State<StickersScreen> {
               ? const Center(
                   child: CircularProgressIndicator()) // TODO Add skeleton
               : ListView.builder(
-                  itemCount: stickerData.stickerPacks!.length,
+                  shrinkWrap: true,
+                  itemCount: _stickerPacks.length,
                   itemBuilder: (context, index) => StickerPackItem(
-                        stickerPack: stickerData.stickerPacks![index],
+                        stickerPack: _stickerPacks[index],
                       ))),
     );
   }

@@ -4,7 +4,6 @@ import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:whatsapp_stickers_handler/exceptions.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../helpers/path_helpers.dart';
 import '../widgets/sticker_image.dart';
 
 class StickerPackScreen extends StatefulWidget {
@@ -49,7 +48,7 @@ class _StickerPackScreenState extends State<StickerPackScreen> {
             pinned: true,
             floating: false,
             title: Text(
-              widget.stickerPack.name!,
+              widget.stickerPack.name,
               overflow: TextOverflow.ellipsis,
             ),
             leading: BackButton(),
@@ -64,11 +63,13 @@ class _StickerPackScreenState extends State<StickerPackScreen> {
                   alignment: Alignment.center,
                   child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: StickerImage(
-                          size: 100,
-                          imageUrl: getStickerImageUrl(widget.stickerPack,
-                              widget.stickerPack.stickers![index])))),
-              childCount: widget.stickerPack.stickers!.length,
+                      child: SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: StickerImage(
+                              imageRef: widget
+                                  .stickerPack.stickers[index].imageRef)))),
+              childCount: widget.stickerPack.stickers.length,
             ),
           )
         ],
