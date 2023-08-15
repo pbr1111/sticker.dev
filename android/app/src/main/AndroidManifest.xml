@@ -2,10 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sticker.dev">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="whatsapp_stickers_handler_example"
+        android:label="Sticker.dev"
         tools:replace="android:name">
         <activity
             android:name=".MainActivity"
