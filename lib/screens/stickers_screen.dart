@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
-import 'package:sticker_dev/widgets/sticker_pack_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../widgets/search_field.dart';
+import '../widgets/sticker_pack_item.dart';
 
 class StickersScreen extends StatefulWidget {
   const StickersScreen({Key? key}) : super(key: key);
@@ -15,18 +17,11 @@ class StickersScreen extends StatefulWidget {
 class _StickersScreenState extends State<StickersScreen> {
   bool _isLoading = false;
   late List<StickerPack> _stickerPacks;
-  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _loadStickers();
-  }
-
-  @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
   }
 
   Future<void> _refreshStickers() async {
@@ -44,7 +39,7 @@ class _StickersScreenState extends State<StickersScreen> {
     var query = Supabase.instance.client
         .from('sticker_packs')
         .select<List<Map<String, dynamic>>>('*, stickers(*)');
-    if (search != null) {
+    if (search?.isNotEmpty ?? false) {
       query = query.ilike('name', "%${search}%");
     }
 
@@ -59,30 +54,33 @@ class _StickersScreenState extends State<StickersScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.title),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: AppLocalizations.of(context)!.search,
-            onPressed: () => _searchStickers("paand"),
-          ),
-        ],
-      ),
-      body: Column(children: [
-        RefreshIndicator(
-            onRefresh: _refreshStickers,
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator()) // TODO Add skeleton
-                : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _stickerPacks.length,
-                    itemBuilder: (context, index) => StickerPackItem(
-                          stickerPack: _stickerPacks[index],
-                        )))
-      ]),
-    );
+        body: NestedScrollView(
+            headerSliverBuilder: (builder, _) => [
+                  SliverAppBar(
+                    title: Text(AppLocalizations.of(context)!.title),
+                    centerTitle: true,
+                    floating: true,
+                    pinned: true,
+                    snap: true,
+                    expandedHeight: 2 * kToolbarHeight,
+                    bottom: PreferredSize(
+                        preferredSize: Size.fromHeight(kToolbarHeight),
+                        child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 14, right: 14, bottom: 6),
+                            child: SearchField(onSearch: _searchStickers))),
+                  ),
+                ],
+            body: RefreshIndicator(
+                onRefresh: _refreshStickers,
+                child: _isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator()) // TODO Add skeleton
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _stickerPacks.length,
+                        itemBuilder: (context, index) => StickerPackItem(
+                              stickerPack: _stickerPacks[index],
+                            )))));
   }
 }
