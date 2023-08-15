@@ -9,6 +9,8 @@ import '../screens/sticker_pack_screen.dart';
 
 class StickerPackItemExtended extends StatelessWidget {
   final StickerPack stickerPack;
+  final WhatsappStickersHandler _whatsappStickersHandler =
+      WhatsappStickersHandler();
 
   StickerPackItemExtended({
     Key? key,
@@ -17,9 +19,6 @@ class StickerPackItemExtended extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WhatsappStickersHandler _whatsappStickersHandler =
-        WhatsappStickersHandler();
-
     return Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
