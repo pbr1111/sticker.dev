@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sticker_dev/screens/profile_screen.dart';
 import 'package:sticker_dev/screens/sticker_create_screen.dart';
 import 'package:sticker_dev/screens/stickers_saved_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/stickers_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await Supabase.initialize(
+    url: 'https://tvjryoppfhnjypxllulc.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2anJ5b3BwZmhuanlweGxsdWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTIwNzkwNTMsImV4cCI6MjAwNzY1NTA1M30.mAqUaxcMG-Z94c1M622ja2nquUQj1G681IEOu8y0rGE',
   );
   runApp(const NavigationBarApp());
 }
@@ -28,11 +28,11 @@ class NavigationBarApp extends StatelessWidget {
         theme: ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
-            colorSchemeSeed: Colors.green[600]),
+            colorSchemeSeed: Colors.green),
         darkTheme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
-          colorSchemeSeed: Colors.green[600],
+          colorSchemeSeed: Colors.green,
         ),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [

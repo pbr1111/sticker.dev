@@ -4,6 +4,7 @@ import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_image.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
+import '../helpers/sticker_path_helpers.dart';
 import '../screens/sticker_pack_screen.dart';
 
 class StickerPackItem extends StatelessWidget {
@@ -53,7 +54,7 @@ class StickerPackItem extends StatelessWidget {
           leading: SizedBox(
               width: 50,
               height: 50,
-              child: StickerImage(imageRef: stickerPack.trayImageRef)),
+              child: StickerImage(stickerPath: getTrayImageUrl(stickerPack))),
           trailing: FutureBuilder(
               future: _whatsappStickersHandler
                   .isStickerPackInstalled(stickerPack.identifier),

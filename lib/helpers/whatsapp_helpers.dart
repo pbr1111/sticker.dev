@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sticker_dev/helpers/url_helpers.dart';
+import 'package:sticker_dev/helpers/sticker_path_helpers.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
-
 import '../models/sticker_data.dart';
 
 Future<void> addPackToWhatsApp(StickerPack stickerPack) async {
@@ -20,7 +19,7 @@ Future<void> addPackToWhatsApp(StickerPack stickerPack) async {
       '${stickersDirectory.path}/${stickerPack.trayImageFile.toLowerCase()}';
 
   downloads.add(DefaultCacheManager()
-      .getSingleFile(getStickerImageUrl(stickerPack.trayImageRef))
+      .getSingleFile(getTrayImageUrl(stickerPack))
       .then((value) => value.copy(traySavePath)));
 
   trayImage = WhatsappStickerImageHandler.fromFile(traySavePath).path;
@@ -30,7 +29,7 @@ Future<void> addPackToWhatsApp(StickerPack stickerPack) async {
         "${stickersDirectory.path}/${(sticker.imageFile).toLowerCase()}";
 
     downloads.add(DefaultCacheManager()
-        .getSingleFile(getStickerImageUrl(sticker.imageRef))
+        .getSingleFile(getStickerImageUrl(sticker))
         .then((value) => value.copy(savePath)));
 
     stickers[WhatsappStickerImageHandler.fromFile(savePath).path] =
