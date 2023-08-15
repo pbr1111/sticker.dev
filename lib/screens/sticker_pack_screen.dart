@@ -3,8 +3,8 @@ import 'package:sticker_dev/helpers/sticker_path_helpers.dart';
 import 'package:sticker_dev/helpers/whatsapp_helpers.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:whatsapp_stickers_handler/exceptions.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../app_localizations.dart';
 import '../widgets/sticker_image.dart';
 
 class StickerPackScreen extends StatefulWidget {

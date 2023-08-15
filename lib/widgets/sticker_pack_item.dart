@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:sticker_dev/widgets/sticker_image.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler.dart';
 
+import '../app_localizations.dart';
 import '../helpers/sticker_path_helpers.dart';
 import '../screens/sticker_pack_screen.dart';
 

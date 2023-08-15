@@ -1,9 +1,11 @@
 {
-  "title": "Sticker.dev",
   "explore": "Explore",
   "add": "Add",
   "remove": "Remove",
-  "search": "Search",
+  "search": "Search stickers",
+  "for_you": "For you",
+  "most_popular": "Most popular",
+  "categories": "Categories",
   "add_sticker_pack": "Add to WhatsApp",
   "sticker_added": "Sticker added",
   "create": "Create",
