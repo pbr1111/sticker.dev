@@ -6,6 +6,16 @@
   "for_you": "For you",
   "most_popular": "Most popular",
   "categories": "Categories",
+  "pack_total_stickers": "{value} stickers",
+  "@pack_total_stickers": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "value": {
+        "type": "int",
+        "example": "25"
+      }
+    }
+  },
   "add_sticker_pack": "Add to WhatsApp",
   "sticker_added": "Sticker added",
   "create": "Create",

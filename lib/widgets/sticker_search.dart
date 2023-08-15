@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sticker_dev/widgets/sticker_pack_item.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../app_localizations.dart';
+import '../models/sticker_data.dart';
 
 class StickerSearch extends StatefulWidget {
   @override
@@ -9,20 +13,22 @@ class StickerSearch extends StatefulWidget {
 }
 
 class _StickerSearchState extends State<StickerSearch> {
-  Future<List<dynamic>> _searchStickers(String search) async {
+  Future<List<StickerPack>> _searchStickers(String search) async {
+    if (search.isEmpty) return [];
+
     var query = Supabase.instance.client
         .from('sticker_packs')
-        .select('name')
+        .select<List<Map<String, dynamic>>>('*, stickers(*)')
         .ilike('name', "%${search}%");
 
-    var response = await query
-        .then((value) => value.map((v) => v['name'] as String).toList());
-    print(response);
+    var response =
+        await query.then((value) => value.map(StickerPack.fromMap).toList());
     return response;
   }
 
   Widget build(BuildContext context) {
     return SearchAnchor(
+        viewHintText: AppLocalizations.of(context)!.search,
         builder: (context, controller) => SearchBar(
               focusNode: AlwaysDisabledFocusNode(),
               hintText: AppLocalizations.of(context)!.search,
@@ -51,13 +57,16 @@ class _StickerSearchState extends State<StickerSearch> {
                       future: _searchStickers(controller.text),
                       builder: (context, snapshot) => !snapshot.hasData ||
                               snapshot.connectionState != ConnectionState.done
-                          ? const CircularProgressIndicator()
+                          ? Center(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 32),
+                                  child: const CircularProgressIndicator()))
                           : ListView.builder(
                               shrinkWrap: true,
                               itemCount: snapshot.data!.length,
                               padding: EdgeInsets.zero,
-                              itemBuilder: (context, index) =>
-                                  Text(snapshot.data![index])))
+                              itemBuilder: (context, index) => StickerPackItem(
+                                  stickerPack: snapshot.data![index])))
                 ]);
   }
 }

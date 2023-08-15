@@ -10,6 +10,7 @@ class StickersSavedScreen extends StatefulWidget {
 }
 
 class _StickersSavedScreenState extends State<StickersSavedScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
