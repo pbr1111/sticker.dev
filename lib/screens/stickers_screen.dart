@@ -21,7 +21,6 @@ class _StickersScreenState extends State<StickersScreen> {
   }
 
   Future<List<StickerPack>> _loadStickers() async {
-    await Future.delayed(Duration(seconds: 2));
     var query = Supabase.instance.client
         .from('sticker_packs')
         .select<List<Map<String, dynamic>>>('*, stickers(*)');
