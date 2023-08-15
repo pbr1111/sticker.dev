@@ -92,8 +92,10 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       body: Navigator(
-          onGenerateRoute: (_) => MaterialPageRoute(
-              builder: (_) => _widgetOptions.elementAt(_selectedTabIndex))),
+          onGenerateRoute: (settings) => MaterialPageRoute(
+                builder: (_) => _widgetOptions.elementAt(_selectedTabIndex),
+                settings: settings,
+              )),
     );
   }
 }
