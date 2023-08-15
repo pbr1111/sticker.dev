@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sticker_dev/models/sticker_data.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,41 +16,27 @@ class StickersScreen extends StatefulWidget {
 }
 
 class _StickersScreenState extends State<StickersScreen> {
-  bool _isLoading = false;
-  late List<StickerPack> _stickerPacks;
+  String? _search;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadStickers();
+  Future<void> _searchStickers(String? search) async {
+    setState(() {
+      _search = search;
+    });
   }
 
   Future<void> _refreshStickers() async {
-    _loadStickers();
+    setState(() {});
   }
 
-  Future<void> _searchStickers(String? search) async {
-    await _loadStickers(search: search);
-  }
-
-  Future<void> _loadStickers({String? search}) async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<List<StickerPack>> _loadStickers() async {
+    await Future.delayed(Duration(seconds: 2));
     var query = Supabase.instance.client
         .from('sticker_packs')
         .select<List<Map<String, dynamic>>>('*, stickers(*)');
-    if (search?.isNotEmpty ?? false) {
-      query = query.ilike('name', "%${search}%");
+    if (_search?.isNotEmpty ?? false) {
+      query = query.ilike('name', "%${_search}%");
     }
-
-    var allData =
-        await query.then((value) => value.map(StickerPack.fromMap).toList());
-
-    setState(() {
-      _stickerPacks = allData;
-      _isLoading = false;
-    });
+    return await query.then((value) => value.map(StickerPack.fromMap).toList());
   }
 
   Widget build(BuildContext context) {
@@ -73,14 +60,69 @@ class _StickersScreenState extends State<StickersScreen> {
                 ],
             body: RefreshIndicator(
                 onRefresh: _refreshStickers,
-                child: _isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator()) // TODO Add skeleton
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _stickerPacks.length,
-                        itemBuilder: (context, index) => StickerPackItem(
-                              stickerPack: _stickerPacks[index],
-                            )))));
+                child: FutureBuilder(
+                    future: _loadStickers(),
+                    builder: (context, snapshot) => !snapshot.hasData ||
+                            snapshot.connectionState != ConnectionState.done
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 10,
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                  baseColor: Theme.of(context).focusColor,
+                                  highlightColor: Theme.of(context).hoverColor,
+                                  child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 19,
+                                          bottom: 19,
+                                          right: 16,
+                                          left: 16),
+                                      child: Row(children: [
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          margin: EdgeInsets.only(right: 12),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 140,
+                                                height: 16,
+                                                margin: const EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 160,
+                                                height: 14,
+                                                margin: const EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ]),
+                                      ])));
+                            },
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) => StickerPackItem(
+                                  stickerPack: snapshot.data![index],
+                                ))))));
   }
 }
