@@ -1,0 +1,52 @@
+name: 🚀 Publish app
+
+on: 
+  release: 
+    types: [published]
+  
+jobs:
+  publishAndroid:
+    name: 🤖📦🚀 Build and deploy Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+      - name: ⚙️ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: ⚙️ Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.6'
+          channel: 'stable'
+
+      - name: 🔐 Retrieve base64 keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_FILE_BASE64 }}
+        run: echo $KEYSTORE_BASE64 | base64 --decode > "${{ github.workspace }}/android-keystore.jks"
+      - name: 📝🔐 Create key.properties file
+        env:
+          KEYSTORE_PROPERTIES_PATH: ${{ github.workspace }}/android/key.properties
+        run: |
+          echo 'storeFile=${{ github.workspace }}/android-keystore.jks' > $KEYSTORE_PROPERTIES_PATH
+          echo 'keyAlias=${{ secrets.KEYSTORE_KEY_ALIAS }}' >> $KEYSTORE_PROPERTIES_PATH
+          echo 'storePassword=${{ secrets.KEYSTORE_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
+          echo 'keyPassword=${{ secrets.KEYSTORE_KEY_PASSWORD }}' >> $KEYSTORE_PROPERTIES_PATH
+      - name: 📝 Edit pubspec version
+        run: |
+          sed -Ei "s/^version: (.*)/version: ${{ github.event.release.tag_name }}/" pubspec.yaml
+      - name: 🤖📦 Create appbundle 
+        run: |
+          flutter pub get
+          flutter build appbundle --release 
+      - name: 🤖🚀 Upload Android ${{ inputs.short-environment-name }} Release to Play Store
+        uses: r0adkll/upload-google-play@v1.1.1
+        with:
+          packageName: com.sticker.dev
+          track: internal
+          status: draft
+          releaseFiles: ${{ github.workspace }}/build/app/outputs/bundle/release/app-release.aab
+          serviceAccountJsonPlainText: "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_JSON }}"
