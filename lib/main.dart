@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sticker_dev/screens/profile_screen.dart';
 import 'package:sticker_dev/screens/sticker_create_screen.dart';
 import 'package:sticker_dev/screens/stickers_saved_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -62,7 +61,6 @@ class _MainScreenState extends State<MainScreen> {
     const StickersScreen(),
     const StickerCreateScreen(),
     const StickersSavedScreen(),
-    const ProfileScreen()
   ];
 
   @override
@@ -90,12 +88,7 @@ class _MainScreenState extends State<MainScreen> {
             selectedIcon: Icon(Icons.bookmark),
             icon: Icon(Icons.bookmark_outline),
             label: AppLocalizations.of(context)!.saved,
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_circle_outlined),
-            label: AppLocalizations.of(context)!.profile,
-          ),
+          )
         ],
       ),
       body: Navigator(

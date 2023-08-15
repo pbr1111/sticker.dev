@@ -30,6 +30,20 @@ class _StickerSearchState extends State<StickerSearch> {
               onTap: () {
                 controller.openView();
               },
+              elevation: MaterialStateProperty.all(3),
+              shadowColor: MaterialStateProperty.all(Colors.transparent),
+              constraints: BoxConstraints(maxHeight: 56),
+              padding: MaterialStateProperty.all(
+                  EdgeInsets.only(left: 16, right: 6)),
+              trailing: [
+                IconButton(
+                    iconSize: 30,
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(),
+                    icon: const Icon(Icons.account_circle),
+                    tooltip: AppLocalizations.of(context)!.profile,
+                    onPressed: () {})
+              ],
             ),
         suggestionsBuilder:
             (BuildContext context, SearchController controller) => [
