@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.add_circle),
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.add_circle_outline),
             label: AppLocalizations.of(context)!.create,
           ),
           NavigationDestination(
