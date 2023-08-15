@@ -38,6 +38,7 @@ class _StickersScreenState extends State<StickersScreen> {
                           pinned: true,
                           floating: true,
                           title: StickerSearch(),
+                          expandedHeight: kToolbarHeight * 2,
                           bottom: TabBar(
                             tabs: [
                               Tab(text: AppLocalizations.of(context)!.for_you),
